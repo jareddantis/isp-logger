@@ -14,10 +14,20 @@
     <div class="bg-white w-full">
         <div class="max-w-4xl w-full mx-auto px-6 py-12">
             <!-- Current ISP info -->
-            <div class="mb-12">
-                <p class="text-xl mb-2">You are connected to</p>
+            <div class="mb-8">
+                <p class="md:text-xl text-lg mb-2">You are connected to</p>
                 <h1 class="md:text-5xl text-3xl font-bold mb-4" id="current-as">(loading)</h1>
-                <p id="current-timestamp" class="text-gray-500"></p>
+            </div>
+
+            <!-- ISP history graph -->
+            <p class="text-sm text-zinc-500 mb-2">&darr; <span id="current-timestamp">Now</span></p>
+            <div id="history-graph"
+                class="select-none grid grid-rows-[repeat(12,minmax(0,.75rem))] grid-cols-[repeat(60,minmax(0,1fr))] md:gap-1"></div>
+            <div id="history-legend" class="flex flex-row-reverse flex-wrap mt-4 text-right mb-8">
+                <div class="flex flex-row items-center ml-4">
+                    <div class="w-2 h-2 bg-zinc-300 rounded-full">&nbsp;</div>
+                    <p class="text-sm text-zinc-500 ml-2">No data</p>
+                </div>
             </div>
             
             <!-- Current connection info -->
@@ -32,19 +42,9 @@
                 </div>
             </div>
 
-            <!-- ISP history graph -->
-            <div id="history-graph"
-                class="select-none grid grid-rows-[repeat(12,minmax(0,.75rem))] grid-cols-[repeat(60,minmax(0,1fr))] md:gap-1"></div>
-            <div id="history-legend" class="flex flex-row-reverse flex-wrap mt-4 text-right">
-                <div class="flex flex-row items-center ml-4">
-                    <div class="w-2 h-2 bg-zinc-300 rounded-full">&nbsp;</div>
-                    <p class="text-sm text-zinc-500 ml-2">No data</p>
-                </div>
-            </div>
-
             <!-- ISP history -->
-            <div id="history" class="mt-8">
-                <p class="text-base mb-4">Past 12 hours</p>
+            <div id="history">
+                <p class="text-base mb-2">Past 12 hours</p>
             </div>
         </div>
     </div>
