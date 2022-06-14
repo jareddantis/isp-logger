@@ -15,7 +15,7 @@ if __name__ == '__main__':
         # Create table if it doesn't exist yet
         cur.execute('''CREATE TABLE IF NOT EXISTS isp_history
             (timestamp INTEGER PRIMARY KEY NOT NULL,
-             asn       TEXT                NOT NULL,
+             asn       INTEGER             NOT NULL,
              as_name   TEXT                NOT NULL)''')
 
         # Get AS info from ipinfo.io
@@ -24,13 +24,13 @@ if __name__ == '__main__':
             ipinfo_response = get('https://ipinfo.io/json', timeout=5)
             ipinfo_json = ipinfo_response.json()
         except:
-            as_number = '-1'
-            as_name = 'No data'
+            as_number = -1
+            as_name = 'Unknown'
         else:
             # Split AS info into ASN and AS name
             as_info: str = ipinfo_json['org']
             as_split = as_info.split(' ', 1)
-            as_number = as_split[0]
+            as_number = as_split[0][2:]
             as_name = as_split[1]
 
         # Insert data into database
