@@ -30,6 +30,35 @@ Run the query script using the command
 python query_isp.py
 ```
 
+As the query script is meant to be run periodically, you might want to create a cron job to run it every minute, like so:
+```
+* * * * * python /path/to/query_isp.py
+```
+
+If you installed the project requirements in a virtualenv, you might want to create a wrapper script for activating the virtualenv and running the script, like this...
+```bash
+#!/bin/bash
+
+# Change to the project directory
+cd "${0%/*}"
+
+# Activate virtualenv in .venv under project directory
+# Change .venv to your virtualenv directory as necessary
+source .venv/bin/activate
+
+# Run dashboard
+PYTHONUNBUFFERED=1 python query_isp.py
+
+# Cleanup
+deactivate
+exit 0
+```
+
+...and creating a cron job to run the wrapper script every minute, like this:
+```
+* * * * * /path/to/wrapper.sh
+```
+
 # Running the dashboard
 
 Although the dashboard only uses static HTML templates, it does make use of TailwindCSS utility classes for styling, which requires generation of the `output.css` file.
@@ -49,6 +78,41 @@ FLASK_APP=dashboard.py FLASK_ENV=development flask run
 ```
 
 The dashboard can then be accessed at `http://localhost:5000/`.
+
+Like the query script, the dashboard is meant to be run automatically, so you might want to create a wrapper script that enters the virtualenv and passes the right arguments to the server for you:
+```bash
+#!/bin/bash
+
+# Change to the project directory
+cd "${0%/*}"
+
+# Activate virtualenv
+source .venv/bin/activate
+
+# Run dashboard
+PYTHONUNBUFFERED=1 FLASK_APP=dashboard.py flask run --host=0.0.0.0
+
+# Cleanup
+deactivate
+exit 0
+```
+
+Since the Flask server will keep itself alive as long as the process is not terminated, you might want to create a systemd service (or something similar for non-Debian systems) to run the Flask server as a daemon:
+
+```
+[Unit]
+Description=isp-logger dashboard
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+ExecStart=/path/to/project/run-dashboard.sh
+WorkingDirectory=/path/to/project
+User=<your username>
+
+[Install]
+WantedBy=multi-user.target
+```
 
 # License
 
