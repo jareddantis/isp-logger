@@ -88,9 +88,7 @@ window.onload = () => {
             // Pad points with outlined cells
             while (num_points < 720) {
                 const point = document.createElement('div')
-                point.classList.add('bg-white');
-                point.classList.add('border');
-                point.classList.add('border-zinc-300');
+                point.classList.add('bg-zinc-300');
                 point.classList.add('md:rounded-full');
                 point.innerHTML = '&nbsp;';
                 $('#history-graph').appendChild(point);
