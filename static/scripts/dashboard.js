@@ -74,7 +74,7 @@ window.onload = () => {
 
                 // Add one data point for every minute
                 console.info(first_seen, last_seen);
-                while (last_seen > first_seen && num_points < 1440) {
+                while (last_seen > first_seen && num_points < 720) {
                     const point = document.createElement('div')
                     point.classList.add('bg-' + as_colors[asn] + '-500');
                     point.classList.add('md:rounded-full');
