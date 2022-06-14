@@ -1,28 +1,6 @@
-import requests
+from requests import get
 from sqlite3 import connect
-import time
-
-
-def get_isp():
-    # Get current time
-    now = int(time.time() * 1000)
-
-    # Get AS info from ipinfo.io
-    ipinfo_url = 'https://ipinfo.io/json'
-    try:
-        ipinfo_response = requests.get(ipinfo_url, timeout=5)
-        ipinfo_json = ipinfo_response.json()
-    except:
-        as_number = '-1'
-        as_name = 'No data'
-    else:
-        # Split AS info into ASN and AS name
-        as_info: str = ipinfo_json['org']
-        as_split = as_info.split(' ', 1)
-        as_number = as_split[0]
-        as_name = as_split[1]
-
-    return now, as_number, as_name
+from time import time
 
 
 if __name__ == '__main__':
@@ -40,8 +18,22 @@ if __name__ == '__main__':
              asn       TEXT                NOT NULL,
              as_name   TEXT                NOT NULL)''')
 
+        # Get AS info from ipinfo.io
+        now = int(time() * 1000)
+        try:
+            ipinfo_response = get('https://ipinfo.io/json', timeout=5)
+            ipinfo_json = ipinfo_response.json()
+        except:
+            as_number = '-1'
+            as_name = 'No data'
+        else:
+            # Split AS info into ASN and AS name
+            as_info: str = ipinfo_json['org']
+            as_split = as_info.split(' ', 1)
+            as_number = as_split[0]
+            as_name = as_split[1]
+
         # Insert data into database
-        now, as_number, as_name = get_isp()
         cur.execute("INSERT INTO isp_history VALUES ({0}, '{1}', '{2}')".format(now, as_number, as_name))
 
         # Close connection
