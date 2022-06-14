@@ -6,7 +6,9 @@ module.exports = {
     "./templates/**/*.html"
   ],
   theme: {
-    extend: {},
+    fontFamily: {
+      sans: ['Roboto Flex', 'Inter', 'sans-serif']
+    },
   },
   plugins: [],
 }
