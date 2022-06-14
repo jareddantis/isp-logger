@@ -16,7 +16,9 @@ if __name__ == '__main__':
         cur.execute('''CREATE TABLE IF NOT EXISTS isp_history
             (timestamp INTEGER PRIMARY KEY NOT NULL,
              asn       INTEGER             NOT NULL,
-             as_name   TEXT                NOT NULL)''')
+             as_name   TEXT                NOT NULL,
+             ip        TEXT                NOT NULL,
+             location  TEXT                NOT NULL)''')
 
         # Get AS info from ipinfo.io
         now = int(time() * 1000)
@@ -33,8 +35,11 @@ if __name__ == '__main__':
             as_number = as_split[0][2:]
             as_name = as_split[1]
 
+            # Construct location string
+            location = '{0}, {1}, {2} {3}'.format(ipinfo_json['city'], ipinfo_json['region'], ipinfo_json['country'], ipinfo_json['postal'])
+
         # Insert data into database
-        cur.execute("INSERT INTO isp_history VALUES ({0}, '{1}', '{2}')".format(now, as_number, as_name))
+        cur.execute("INSERT INTO isp_history VALUES ({0}, '{1}', '{2}', '{3}', '{4}')".format(now, as_number, as_name, ipinfo_json['ip'], location))
 
         # Close connection
         cur.close()
