@@ -24,7 +24,7 @@ def get_isp(cur: Cursor):
         as_name = as_split[1]
 
     # Insert data into database
-    cur.execute("INSERT INTO isp_history VALUES (NULL, '{0}', '{1}', {2})".format(as_number, as_name, now))
+    cur.execute("INSERT INTO isp_history VALUES ({0}, '{1}', '{2}')".format(now, as_number, as_name))
 
 
 if __name__ == '__main__':
@@ -38,10 +38,9 @@ if __name__ == '__main__':
     else:
         # Create table if it doesn't exist yet
         cur.execute('''CREATE TABLE IF NOT EXISTS isp_history
-            (id        INTEGER PRIMARY KEY,
+            (timestamp INTEGER PRIMARY KEY NOT NULL,
              asn       TEXT                NOT NULL,
-             as_name   TEXT                NOT NULL,
-             timestamp INTEGER             NOT NULL)
+             as_name   TEXT                NOT NULL)
         ''')
 
         get_isp(cur)
