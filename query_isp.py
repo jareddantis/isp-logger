@@ -1,9 +1,9 @@
 import requests
-from sqlite3 import connect, Cursor
+from sqlite3 import connect
 import time
 
 
-def get_isp(cur: Cursor):
+def get_isp():
     # Get current time
     now = int(time.time())
 
@@ -22,8 +22,7 @@ def get_isp(cur: Cursor):
         as_number = as_split[0]
         as_name = as_split[1]
 
-    # Insert data into database
-    cur.execute("INSERT INTO isp_history VALUES ({0}, '{1}', '{2}')".format(now, as_number, as_name))
+    return now, as_number, as_name
 
 
 if __name__ == '__main__':
@@ -41,6 +40,10 @@ if __name__ == '__main__':
              asn       TEXT                NOT NULL,
              as_name   TEXT                NOT NULL)''')
 
-        get_isp(cur)
+        # Insert data into database
+        now, as_number, as_name = get_isp(cur)
+        cur.execute("INSERT INTO isp_history VALUES ({0}, '{1}', '{2}')".format(now, as_number, as_name))
+
+        # Close connection
         cur.close()
         con.commit()
