@@ -1,5 +1,4 @@
 **/*.db
-static/styles/output.css
 **/__pycache__
 cert.pem
 key.pem
