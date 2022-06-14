@@ -16,11 +16,7 @@
             "args": [
                 "run",
                 "--host=0.0.0.0",
-                "--no-debugger",
-                "--cert",
-                "cert.pem",
-                "--key",
-                "key.pem"
+                "--no-debugger"
             ],
             "jinja": true
         }
