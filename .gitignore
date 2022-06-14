@@ -1,4 +1,6 @@
 **/*.db
 **/__pycache__
+.virtualenv
+.venv
 cert.pem
 key.pem
