@@ -8,6 +8,7 @@
 
     <!-- Styles -->
     <link href="{{ url_for('static', filename='styles/output.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='styles/output.css') }}" rel="stylesheet">
 </head>
 <body>
     <div class="bg-white w-full">
@@ -15,26 +16,34 @@
             <!-- Current ISP info -->
             <div class="mb-12">
                 <p class="text-xl mb-2">You are connected to</p>
-                <h1 class="text-5xl text-orange-500 font-bold" id="current-as">(loading)</h1>
+                <h1 class="text-5xl font-bold mb-4" id="current-as">(loading)</h1>
+                <p id="current-timestamp" class="text-gray-500"></p>
             </div>
             
             <!-- Current connection info -->
-            <div class="flex flex-row flex-wrap justify-between mb-8 max-w-full w-full">
+            <div class="flex flex-row flex-wrap justify-betweenmax-w-full w-full">
                 <div class="flex-auto grow mb-8 pr-8">
-                    <p class="text-base text-teal-500 mb-2">IP address &amp; hostname</p>
+                    <p class="text-base mb-2">IP address</p>
                     <h2 class="text-2xl font-bold" id="current-ip">(loading)</h2>
                 </div>
-                <div class="flex-auto">
-                    <p class="text-base text-teal-500 mb-2">Location</p>
+                <div class="flex-auto mb-8">
+                    <p class="text-base mb-2">Location</p>
                     <h2 class="text-2xl font-bold" id="current-loc">(loading)</h2>
                 </div>
             </div>
 
-            <hr class="my-8">
+            <!-- ISP history graph -->
+            <div id="history-graph" class="select-none grid grid-rows-[repeat(12,.75rem)] grid-cols-[repeat(60,1fr)] md:gap-1"></div>
+            <div id="history-legend" class="flex flex-row-reverse mt-4">
+                <div class="flex flex-row items-center ml-4">
+                    <div class="w-2 h-2 border border-zinc-300 bg-white rounded-full">&nbsp;</div>
+                    <p class="text-sm text-zinc-500 ml-2">No data</p>
+                </div>
+            </div>
 
             <!-- ISP history -->
-            <div id="history">
-                <p class="text-base text-teal-500 mb-4">ISP history</p>
+            <div id="history" class="mt-8">
+                <p class="text-base mb-4">Past 12 hours</p>
             </div>
         </div>
     </div>
