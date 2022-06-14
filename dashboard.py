@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from json import dumps
+from requests import get
 from sqlite3 import connect
 
 
@@ -19,6 +20,26 @@ def get_isp_info():
     last_seen = 0
     last_asn = None
     last_as_name = None
+
+    # Get AS info from ipinfo.io
+    try:
+        ipinfo_response = get('https://ipinfo.io/json', timeout=5)
+        ipinfo_json = ipinfo_response.json()
+    except:
+        current_isp = {
+            'ip': '0.0.0.0',
+            'hostname': 'No data',
+            'location': 'No data',
+            'org': 'No data'
+        }
+    else:
+        # Split AS info into ASN and AS name
+        current_isp = {
+            'ip': ipinfo_json['ip'],
+            'hostname': ipinfo_json['hostname'],
+            'location': "{0}, {1}, {2} {3}".format(ipinfo_json['city'], ipinfo_json['region'], ipinfo_json['country'], ipinfo_json['postal']),
+            'org': ipinfo_json['org']
+        }
 
     # Get number of history entries to return
     num_entries = request.args.get('num_entries', type=int, default=10)
@@ -68,7 +89,10 @@ def get_isp_info():
     cur.close()
 
     # Return the list of ISPs
-    return dumps(isp_history)
+    return dumps({
+        'now': current_isp,
+        'history': isp_history
+    })
 
 
 if __name__ == '__main__':
