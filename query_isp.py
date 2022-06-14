@@ -1,4 +1,3 @@
-import json
 import requests
 from sqlite3 import connect, Cursor
 import time
@@ -40,8 +39,7 @@ if __name__ == '__main__':
         cur.execute('''CREATE TABLE IF NOT EXISTS isp_history
             (timestamp INTEGER PRIMARY KEY NOT NULL,
              asn       TEXT                NOT NULL,
-             as_name   TEXT                NOT NULL)
-        ''')
+             as_name   TEXT                NOT NULL)''')
 
         get_isp(cur)
         cur.close()
