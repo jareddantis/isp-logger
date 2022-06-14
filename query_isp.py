@@ -5,7 +5,7 @@ import time
 
 def get_isp():
     # Get current time
-    now = int(time.time())
+    now = int(time.time() * 1000)
 
     # Get AS info from ipinfo.io
     ipinfo_url = 'https://ipinfo.io/json'
@@ -41,7 +41,7 @@ if __name__ == '__main__':
              as_name   TEXT                NOT NULL)''')
 
         # Insert data into database
-        now, as_number, as_name = get_isp(cur)
+        now, as_number, as_name = get_isp()
         cur.execute("INSERT INTO isp_history VALUES ({0}, '{1}', '{2}')".format(now, as_number, as_name))
 
         # Close connection
