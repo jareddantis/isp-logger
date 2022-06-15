@@ -29,7 +29,7 @@ def get_isp(con: Connection):
     cur = con.cursor()
     cur.execute('''CREATE TABLE IF NOT EXISTS isp_history
         (start     INTEGER PRIMARY KEY NOT NULL,
-            end       INTEGER             NOT NULL,
+            `end`     INTEGER             NOT NULL,
             asn       INTEGER             NOT NULL,
             as_name   TEXT                NOT NULL,
             ip        TEXT                NOT NULL,
@@ -72,7 +72,7 @@ def get_isp(con: Connection):
         cur.execute("INSERT INTO isp_history VALUES ({0}, {1}, {2}, '{3}', '{4}', '{5}')".format(now, now, as_number, as_name, ip_addr, location))
     else:
         # Update existing record's end column
-        cur.execute("UPDATE isp_history SET end={0}, ip={1} WHERE start={2}".format(now, ip_addr, last_record[0]))
+        cur.execute("UPDATE isp_history SET `end`={0}, ip='{1}' WHERE start={2}".format(now, ip_addr, last_record[0]))
 
     # Commit changes
     con.commit()
