@@ -5,6 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: Query ISP",
+            "type": "python",
+            "request": "launch",
+            "program": "query_isp.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
             "name": "Python: Flask",
             "type": "python",
             "request": "launch",
