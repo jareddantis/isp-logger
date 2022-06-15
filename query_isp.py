@@ -42,7 +42,9 @@ def get_isp(con: Connection):
         ipinfo_json = ipinfo_response.json()
     except:
         as_number = -1
-        as_name = 'Unknown'
+        as_name = 'No data'
+        ip_addr = '-'
+        location = '-'
     else:
         # Get ASN and AS name
         as_info: str = ipinfo_json['org']
@@ -59,9 +61,15 @@ def get_isp(con: Connection):
     # Try to get most recent record
     cur.execute('SELECT * FROM isp_history WHERE start=(SELECT max(start) FROM isp_history)')
     last_record = cur.fetchone()
-    if last_record is None:
-        # No existing records, insert new record
-        cur.execute("INSERT INTO isp_history VALUES ({0}, {1}, '{2}', '{3}', '{4}', '{5}')".format(now, now, as_number, as_name, ip_addr, location))
+
+    # Is there an existing record in the database?
+    if last_record is None or now - last_record[1] > 60000:
+        if last_record is None:
+            # Last record is more than 1 minute ago, so we should signify that there was a gap in data.
+            cur.execute("INSERT INTO isp_history VALUES ({0}, {1}, {2}, '{3}', '{4}', '{5}')", (last_record[1] + 1, now - 1, -1, 'No data', '-', '-'))
+
+        # Insert new record
+        cur.execute("INSERT INTO isp_history VALUES ({0}, {1}, {2}, '{3}', '{4}', '{5}')".format(now, now, as_number, as_name, ip_addr, location))
     else:
         # Update existing record's end column
         cur.execute("UPDATE isp_history SET end={0}, ip={1} WHERE start={2}".format(now, ip_addr, last_record[0]))
