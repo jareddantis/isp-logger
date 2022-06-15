@@ -66,7 +66,7 @@ def get_isp(con: Connection):
     if last_record is None or now - last_record[1] > 60000:
         if last_record is not None:
             # Last record is more than 1 minute ago, so we should signify that there was a gap in data.
-            cur.execute("INSERT INTO isp_history VALUES ({0}, {1}, {2}, '{3}', '{4}', '{5}')", (last_record[1] + 1, now - 1, -1, 'No connection', '-', '-'))
+            cur.execute("INSERT INTO isp_history VALUES ({0}, {1}, {2}, '{3}', '{4}', '{5}')".format(last_record[1] + 1, now - 1, -1, 'No connection', '-', '-'))
 
         # Insert new record
         cur.execute("INSERT INTO isp_history VALUES ({0}, {1}, {2}, '{3}', '{4}', '{5}')".format(now, now, as_number, as_name, ip_addr, location))
