@@ -54,17 +54,34 @@ window.onload = () => {
             // Map each AS to a color
             const as_list = data.autonomous_systems;
             const as_colors = {'-1': 'zinc-300'};
+            let has_generic_color = false;
             for (const [asn, as_name] of Object.entries(as_list)) {
                 // Skip if ASN is -1 (no data/connection)
                 if (asn === '-1') {
                     continue;
                 }
-                const as_color = colors[asn % colors.length];
-                as_colors[asn.toString()] = as_color + '-500';
+                
+                // Are there any colors left?
+                if (!colors.length) {
+                    // Use generic neutral color
+                    as_colors[asn] = 'neutral-900';
 
-                // Create legend item
-                const legend_item = history_legend(as_color, as_name);
-                $('#history-legend').appendChild(legend_item);
+                    if (!has_generic_color) {
+                        // Create legend item
+                        const legend_item = history_legend('neutral-900', as_name + ' and others');
+                        $('#history-legend').appendChild(legend_item);
+                        has_generic_color = true;
+                    }
+                } else {
+                    // Reserve color for this ASN
+                    const color_idx = parseInt(asn) % colors.length;
+                    as_colors[asn] = colors[color_idx] + '-500';
+
+                    // Create legend item
+                    const legend_item = history_legend(colors[color_idx], as_name);
+                    colors.splice(color_idx, 1);
+                    $('#history-legend').appendChild(legend_item);
+                }
             }
 
             // Create rows for each ISP in history
