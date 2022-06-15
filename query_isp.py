@@ -14,7 +14,8 @@ if __name__ == '__main__':
     else:
         # Create table if it doesn't exist yet
         cur.execute('''CREATE TABLE IF NOT EXISTS isp_history
-            (timestamp INTEGER PRIMARY KEY NOT NULL,
+            (start     INTEGER PRIMARY KEY NOT NULL,
+             end       INTEGER             NOT NULL,
              asn       INTEGER             NOT NULL,
              as_name   TEXT                NOT NULL,
              ip        TEXT                NOT NULL,
@@ -29,17 +30,27 @@ if __name__ == '__main__':
             as_number = -1
             as_name = 'Unknown'
         else:
-            # Split AS info into ASN and AS name
+            # Get ASN and AS name
             as_info: str = ipinfo_json['org']
             as_split = as_info.split(' ', 1)
             as_number = as_split[0][2:]
             as_name = as_split[1]
 
-            # Construct location string
-            location = '{0}, {1}, {2} {3}'.format(ipinfo_json['city'], ipinfo_json['region'], ipinfo_json['country'], ipinfo_json['postal'])
+            # Get IP
+            ip_addr = ipinfo_json['ip']
 
-        # Insert data into database
-        cur.execute("INSERT INTO isp_history VALUES ({0}, '{1}', '{2}', '{3}', '{4}')".format(now, as_number, as_name, ipinfo_json['ip'], location))
+            # Construct location string
+            location = '{0}, {1}, {2}'.format(ipinfo_json['city'], ipinfo_json['region'], ipinfo_json['country'])
+
+        # Try to get most recent record
+        cur.execute('SELECT * FROM isp_history WHERE start=(SELECT max(start) FROM isp_history)')
+        last_record = cur.fetchone()
+        if last_record is None:
+            # No existing records, insert new record
+            cur.execute("INSERT INTO isp_history VALUES ({0}, {1}, '{2}', '{3}', '{4}', '{5}')".format(now, now, as_number, as_name, ip_addr, location))
+        else:
+            # Update existing record's end column
+            cur.execute("UPDATE isp_history SET end={0} WHERE start={1}".format(now, last_record[0]))
 
         # Close connection
         cur.close()
