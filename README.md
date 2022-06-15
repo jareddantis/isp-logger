@@ -3,16 +3,16 @@ isp-logger
 
 This is a web-based application for monitoring and logging ISP data to a database. It is meant for use in multi-WAN environments, where the current ISP might change depending on factors such as load balancing or failover configurations, and is useful for monitoring outages.
 
-# Structure
+## Structure
 
 The application is divided into two parts:
 
 - `query_isp.py`, a Python script that queries the current ISP from [ipinfo.io](https://ipinfo.io) and logs the result to an SQLite3 database called `isp.db`.
 - `dashboard.py`, a Python script that instantiates a Flask server for querying the current ISP and displaying historical data in a browser.
 
-`query_isp.py` is meant to be run periodically, and `dashboard.py` is meant to be run as a daemon/always-on process.
+Both parts are meant to be run as daemon/always-on processes.
 
-# Requirements
+## Requirements
 
 This application was wrote for Python 3.9.2, as this is the version that ships with Raspbian OS Bullseye at the time of writing, but it should work with any Python 3.9+ version.
 
@@ -23,16 +23,11 @@ pip install -r requirements.txt
 
 Remember to use a virtualenv!
 
-# Running the query script
+## Running the query script
 
 Run the query script using the command
 ```
 python query_isp.py
-```
-
-As the query script is meant to be run periodically, you might want to create a cron job to run it every minute, like so:
-```
-* * * * * python /path/to/query_isp.py
 ```
 
 If you installed the project requirements in a virtualenv, you might want to create a wrapper script for activating the virtualenv and running the script, like this...
@@ -54,12 +49,23 @@ deactivate
 exit 0
 ```
 
-...and creating a cron job to run the wrapper script every minute, like this:
+...and creating a systemd script to run the wrapper script in the background, like this:
 ```
-* * * * * /path/to/wrapper.sh
+[Unit]
+Description=isp-logger daemon
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+ExecStart=/path/to/project/run-query.sh
+WorkingDirectory=/path/to/project
+User=<your username>
+
+[Install]
+WantedBy=multi-user.target
 ```
 
-# Running the dashboard
+## Running the dashboard
 
 Although the dashboard only uses static HTML templates, it does make use of TailwindCSS utility classes for styling, which requires generation of the `output.css` file.
 
@@ -97,7 +103,7 @@ deactivate
 exit 0
 ```
 
-Since the Flask server will keep itself alive as long as the process is not terminated, you might want to create a systemd service (or something similar for non-Debian systems) to run the Flask server as a daemon:
+You might also want to create a systemd service (or something similar for non-Debian systems) to run the Flask server as a daemon:
 
 ```
 [Unit]
@@ -114,6 +120,6 @@ User=<your username>
 WantedBy=multi-user.target
 ```
 
-# License
+### License
 
 See LICENSE.md.
