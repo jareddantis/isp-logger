@@ -53,10 +53,14 @@ window.onload = () => {
 
             // Map each AS to a color
             const as_list = data.autonomous_systems;
-            const as_colors = {'-1': 'gray'};
+            const as_colors = {'-1': 'zinc-300'};
             for (const [asn, as_name] of Object.entries(as_list)) {
+                // Skip if ASN is -1 (no data/connection)
+                if (asn === '-1') {
+                    continue;
+                }
                 const as_color = colors[asn % colors.length];
-                as_colors[asn.toString()] = as_color;
+                as_colors[asn.toString()] = as_color + '-500';
 
                 // Create legend item
                 const legend_item = history_legend(as_color, as_name);
@@ -80,10 +84,9 @@ window.onload = () => {
                 $('#history').appendChild(row);
 
                 // Add one data point for every minute
-                console.info(first_seen, last_seen);
                 while (last_seen > first_seen && num_points < 720) {
                     const point = document.createElement('div')
-                    point.classList.add('bg-' + as_colors[asn] + '-500');
+                    point.classList.add('bg-' + as_colors[asn]);
                     point.classList.add('md:rounded-full');
                     point.innerHTML = '&nbsp;';
                     $('#history-graph').appendChild(point);
