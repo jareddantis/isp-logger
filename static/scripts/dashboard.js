@@ -34,6 +34,13 @@ window.onload = () => {
     fetch('/api/v1/isp')
         .then(response => response.json())
         .then(data => {
+            // If no data, display no data
+            if (!data.length) {
+                $('#current-as').innerText = '(no data)';
+                $('#current-ip').innerText = '-';
+                $('#current-loc').innerText = '-';
+            }
+
             // Display current ISP info
             const current_isp = data.history[0];
             const current_obj = new Date(current_isp.last_seen);
