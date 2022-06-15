@@ -1,8 +1,8 @@
 from requests import get
-from signal import signal
 from sqlite3 import connect, Connection
 from time import sleep, time
 import schedule
+import signal
 
 
 class GracefulKiller:
