@@ -17,55 +17,31 @@ def dashboard_page():
 def get_isp_info():
     autonomous_systems = {}
     isp_history = []
-    first_seen = 0
-    last_seen = 0
-    last_asn = None
-    last_as_name = None
 
     # Open connection to SQLite database
     con = connect('isp.db')
     cur = con.cursor()
 
     # Iterate through all rows
-    cur.execute('SELECT * FROM isp_history ORDER BY timestamp DESC')
+    cur.execute('SELECT * FROM isp_history ORDER BY start DESC')
     now = time() * 1000
     for row in cur:
-        timestamp, asn, as_name, ip, loc = row
+        start, end, asn, as_name, ip, loc = row
 
         # If timestamp is more than 12 hours ago, abort
-        if (now - timestamp) > 43200000:
+        if (now - end) > 43200000:
             break
         
         # Add to list of ASes
         if asn not in autonomous_systems.keys():
             autonomous_systems[asn] = as_name
 
-        # If this ASN is different, add it to the list
-        first_seen = timestamp
-        if asn != last_asn:
-            if last_asn != None:
-                # This is not the first row in the database, add the last AS to the list.
-                isp_history.append({
-                    'asn': last_asn,
-                    'as_name': last_as_name,
-                    'first_seen': first_seen,
-                    'last_seen': last_seen,
-                    'ip': ip,
-                    'location': loc
-                })
-
-            # Update current ASN
-            last_asn = asn
-            last_as_name = as_name
-            last_seen = timestamp
-    else:
-        # If we got to this point, the ISP did not change enough times to be added
-        # as a row in the history. Add it now before we finish.
+        # This is not the first row in the database, add the last AS to the list.
         isp_history.append({
-            'asn': last_asn,
-            'as_name': last_as_name,
-            'first_seen': first_seen,
-            'last_seen': last_seen,
+            'asn': asn,
+            'as_name': as_name,
+            'first_seen': start,
+            'last_seen': end,
             'ip': ip,
             'location': loc
         })
