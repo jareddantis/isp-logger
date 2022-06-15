@@ -5,9 +5,9 @@ const history_row = (as_name, first_seen, last_seen) => {
     const first_obj = new Date(first_seen);
     const last_obj = new Date(last_seen);
     const first_date = first_obj.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    const first_time = first_obj.toLocaleTimeString('en-US');
+    const first_time = first_obj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
     const last_date = last_obj.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    const last_time = last_obj.toLocaleTimeString('en-US');
+    const last_time = last_obj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
 
     // Create row
     const row = document.createElement('div');
