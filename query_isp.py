@@ -64,8 +64,7 @@ def get_isp(con: Connection):
         cur.execute("INSERT INTO isp_history VALUES ({0}, {1}, '{2}', '{3}', '{4}', '{5}')".format(now, now, as_number, as_name, ip_addr, location))
     else:
         # Update existing record's end column
-        print('Updating existing record: {0}'.format(last_record))
-        cur.execute("UPDATE isp_history SET end={0} WHERE start={1}".format(now, last_record[0]))
+        cur.execute("UPDATE isp_history SET end={0}, ip={1} WHERE start={2}".format(now, ip_addr, last_record[0]))
 
     # Commit changes
     con.commit()
