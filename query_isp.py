@@ -91,7 +91,7 @@ if __name__ == '__main__':
 
     # Run at the start of every system clock minute
     try:
-        schedule.every(2).minute.at(':00').do(get_isp, con)
+        schedule.every(2).minutes.at(':00').do(get_isp, con)
         while not int_handler.kill_now:
             schedule.run_pending()
             sleep(0.1)
