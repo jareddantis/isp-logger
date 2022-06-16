@@ -14,7 +14,7 @@ Both parts are meant to be run as daemon/always-on processes.
 
 ## Requirements
 
-This application was wrote for Python 3.9.2, as this is the version that ships with Raspbian OS Bullseye at the time of writing, but it should work with any Python 3.9+ version.
+This application was written for Python 3.9.2, as this is the version that ships with Raspbian OS Bullseye at the time of writing, but it should work with any Python 3.9+ version.
 
 The packages required by the application may be installed using
 ```
