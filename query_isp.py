@@ -63,7 +63,7 @@ def get_isp(con: Connection):
     last_record = cur.fetchone()
 
     # Is there an existing record in the database?
-    if last_record is None or now - last_record[1] > 90000:
+    if last_record is None or now - last_record[1] > 150000:
         if last_record is not None:
             # Last record is more than 1 minute ago, so we should signify that there was a gap in data.
             cur.execute("INSERT INTO isp_history VALUES ({0}, {1}, {2}, '{3}', '{4}', '{5}')".format(last_record[1] + 1, now - 1, -1, 'No connection', '-', '-'))
@@ -85,7 +85,7 @@ if __name__ == '__main__':
 
     # Run at the start of every system clock minute
     try:
-        schedule.every().minute.at(':00').do(get_isp, con)
+        schedule.every(2).minute.at(':00').do(get_isp, con)
         while not int_handler.kill_now:
             schedule.run_pending()
             sleep(0.1)

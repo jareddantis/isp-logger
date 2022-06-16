@@ -101,19 +101,19 @@ window.onload = () => {
                 $('#history').appendChild(row);
 
                 // Add one data point for every minute
-                while (last_seen > first_seen && num_points < 720) {
+                while (last_seen > first_seen && num_points < 360) {
                     const point = document.createElement('div')
                     point.classList.add('bg-' + as_colors[asn]);
                     point.classList.add('md:rounded-full');
                     point.innerHTML = '&nbsp;';
                     $('#history-graph').appendChild(point);
-                    last_seen -= 60000;
+                    last_seen -= 120000;
                     num_points++;
                 }
             }
 
             // Pad points with outlined cells
-            while (num_points < 720) {
+            while (num_points < 360) {
                 const point = document.createElement('div')
                 point.classList.add('bg-zinc-300');
                 point.classList.add('md:rounded-full');
