@@ -40,6 +40,12 @@ def get_isp(con: Connection):
     try:
         ipinfo_response = get('https://ipinfo.io/json', timeout=5)
         ipinfo_json = ipinfo_response.json()
+
+        # Check if we are being rate-limited
+        if 'error' in ipinfo_json.keys() and ipinfo_json['status'] == 429:
+            print('Rate-limited, sleeping for 5 minutes.')
+            sleep(300)
+            return
     except:
         as_number = -1
         as_name = 'No connection'
