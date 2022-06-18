@@ -59,7 +59,7 @@ def get_isp(con: Connection):
         # Get ASN and AS name
         as_info: str = ipinfo_json['org']
         as_split = as_info.split(' ', 1)
-        as_number = as_split[0][2:]
+        as_number = int(as_split[0][2:])
         as_name = as_split[1]
 
         # Get IP
