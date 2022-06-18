@@ -46,7 +46,7 @@ window.onload = () => {
             const current_obj = new Date(current_isp.last_seen);
             const current_date = current_obj.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
             const current_time = current_obj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
-            $('#current-as').innerText = current_isp.as_name + ' (AS' + current_isp.asn + ')';
+            $('#current-as').innerText = current_isp.as_name + ' (AS ' + current_isp.asn + ')';
             $('#current-ip').innerHTML = current_isp.ip;
             $('#current-loc').innerHTML = current_isp.location;
             $('#current-timestamp').innerText = current_date + ' ' + current_time;
@@ -89,7 +89,7 @@ window.onload = () => {
             for (const item in data.history) {
                 // Display 'no connection' if ASN is -1
                 const asn = data.history[item].asn;
-                let as_name = data.history[item].as_name + ' (AS' + asn + ')';
+                let as_name = data.history[item].as_name + ' (AS ' + asn + ')';
                 if (asn === -1) {
                     as_name = 'No internet connection';
                 }
