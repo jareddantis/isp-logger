@@ -5,6 +5,10 @@ import schedule
 import signal
 
 
+# SQL query for inserting new record
+INSERT_FMTSTR = "INSERT INTO isp_history VALUES ({0}, {1}, {2}, '{3}', '{4}', '{5}')"
+
+
 class GracefulKiller:
     """
     https://stackoverflow.com/a/31464349
@@ -71,14 +75,14 @@ def get_isp(con: Connection):
     # Is there an existing record in the database?
     if last_record is None:
         # Insert new record
-        cur.execute("INSERT INTO isp_history VALUES ({0}, {1}, {2}, '{3}', '{4}', '{5}')".format(now, now, as_number, as_name, ip_addr, location))
+        cur.execute(INSERT_FMTSTR.format(now, now, as_number, as_name, ip_addr, location))
     else:
         if now - last_record[1] > 150000:
             # Last record is more than 2 minutes ago, so we should signify that there was a gap in data.
-            cur.execute("INSERT INTO isp_history VALUES ({0}, {1}, {2}, '{3}', '{4}', '{5}')".format(last_record[1] + 1, now - 1, -1, 'No data', '-', '-'))
+            cur.execute(INSERT_FMTSTR.format(last_record[1] + 1, now - 1, -1, 'No data', '-', '-'))
         elif last_record[2] != as_number:
             # AS number changed, insert new record
-            cur.execute("INSERT INTO isp_history VALUES ({0}, {1}, {2}, '{3}', '{4}', '{5}')".format(now, now, as_number, as_name, ip_addr, location))
+            cur.execute(INSERT_FMTSTR.format(now, now, as_number, as_name, ip_addr, location))
         else:
             # Still connected to the same network, update existing record's end column
             cur.execute("UPDATE isp_history SET `end`={0}, ip='{1}' WHERE start={2}".format(now, ip_addr, last_record[0]))
