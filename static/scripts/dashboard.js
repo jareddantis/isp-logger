@@ -20,7 +20,7 @@ const history_row = (as_name, first_seen, last_seen) => {
 };
 const history_legend = (color, as_name) => {
     const doc = new DOMParser().parseFromString(`
-        <div class="flex flex-row items-center">
+        <div class="flex flex-row items-center ml-4">
             <div class="w-2 h-2 bg-${color}-500 rounded-full">&nbsp;</div>
             <p class="text-sm text-zinc-500 ml-2">${as_name}</p>
         </div>
