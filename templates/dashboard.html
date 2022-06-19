@@ -51,6 +51,18 @@
         </div>
     </div>
 
+    <!-- Dummy divs so Tailwind loads the bg-color classes at build -->
+    <div class="hidden">
+        <div class="bg-red-500"></div>
+        <div class="bg-orange-500"></div>
+        <div class="bg-yellow-500"></div>
+        <div class="bg-green-500"></div>
+        <div class="bg-blue-500"></div>
+        <div class="bg-indigo-500"></div>
+        <div class="bg-violet-500"></div>
+        <div class="bg-zinc-500"></div>
+    </div>
+
     <!-- Scripts -->
     <script src="{{ url_for('static', filename='scripts/dashboard.js') }}"></script>
 </body>
