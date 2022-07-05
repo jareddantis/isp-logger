@@ -9,13 +9,13 @@ const history_row = (as_name, first_seen, last_seen) => {
     // Turn timestamps into human-readable dates
     const first_obj = new Date(first_seen);
     const first_date = first_obj.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    const first_time = first_obj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+    const first_time = first_obj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
     let last_date = 'Now';
     let last_time = '';
     if (last_seen != -1) {
         const last_obj = new Date(last_seen);
         last_date = last_obj.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-        last_time = last_obj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+        last_time = last_obj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
     }
 
     // Create row
@@ -54,7 +54,7 @@ window.onload = () => {
             const current_isp = data.history[0];
             const current_obj = new Date(current_isp.last_seen);
             const current_date = current_obj.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-            const current_time = current_obj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+            const current_time = current_obj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
             $('#current-as').innerText = current_isp.as_name + ' (AS ' + current_isp.asn + ')';
             $('#current-ip').innerHTML = current_isp.ip;
             $('#current-loc').innerHTML = current_isp.location;
