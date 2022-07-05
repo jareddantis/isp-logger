@@ -1,13 +1,22 @@
 const $ = (selector) => document.querySelector(selector);
 
+const graph_cell = (color) => {    
+    const cell = document.createElement('div');
+    cell.classList.add(`bg-${color}`, 'md:rounded-full');
+    return cell;
+};
 const history_row = (as_name, first_seen, last_seen) => {
     // Turn timestamps into human-readable dates
     const first_obj = new Date(first_seen);
-    const last_obj = new Date(last_seen);
     const first_date = first_obj.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
     const first_time = first_obj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
-    const last_date = last_obj.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    const last_time = last_obj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+    let last_date = 'Now';
+    let last_time = '';
+    if (last_seen != -1) {
+        const last_obj = new Date(last_seen);
+        last_date = last_obj.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        last_time = last_obj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+    }
 
     // Create row
     const row = document.createElement('div');
@@ -86,27 +95,31 @@ window.onload = () => {
 
             // Create rows for each ISP in history
             let num_points = 0;
-            for (const item in data.history) {
+            for (let i = 0; i < data.history.length; i++) {
+                const first_seen = data.history[i].first_seen;
+                let last_seen = data.history[i].last_seen;
+
                 // Display 'no connection' if ASN is -1
-                const asn = data.history[item].asn;
-                let as_name = data.history[item].as_name + ' (AS ' + asn + ')';
+                const asn = data.history[i].asn;
+                let as_name = data.history[i].as_name + ' (AS ' + asn + ')';
                 if (asn === -1) {
                     as_name = 'No internet connection';
                 }
 
                 // Display history data
-                const first_seen = data.history[item].first_seen;
-                let last_seen = data.history[item].last_seen;
-                const row = history_row(as_name, first_seen, last_seen);
+                let row;
+                if (i == 0) {
+                    // First row
+                    row = history_row(as_name, first_seen, -1);
+                } else {
+                    // Not the first row
+                    row = history_row(as_name, first_seen, data.history[i - 1].first_seen);
+                }
                 $('#history').appendChild(row);
 
                 // Add one data point for every minute
-                while (last_seen > first_seen && num_points < 360) {
-                    const point = document.createElement('div')
-                    point.classList.add('bg-' + as_colors[asn]);
-                    point.classList.add('md:rounded-full');
-                    point.innerHTML = '&nbsp;';
-                    $('#history-graph').appendChild(point);
+                while (last_seen >= first_seen && num_points < 360) {
+                    $('#history-graph').appendChild(graph_cell(as_colors[asn]));
                     last_seen -= 120000;
                     num_points++;
                 }
@@ -114,11 +127,7 @@ window.onload = () => {
 
             // Pad points with outlined cells
             while (num_points < 360) {
-                const point = document.createElement('div')
-                point.classList.add('bg-zinc-300');
-                point.classList.add('md:rounded-full');
-                point.innerHTML = '&nbsp;';
-                $('#history-graph').appendChild(point);
+                $('#history-graph').appendChild(graph_cell('zinc-300'));
                 num_points++;
             }
         });
