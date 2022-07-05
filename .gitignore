@@ -4,3 +4,4 @@
 .venv
 cert.pem
 key.pem
+.python-version
